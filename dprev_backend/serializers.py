@@ -31,7 +31,7 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('photo_name_pairs', 'game_history')
+        fields = ('photo_name_pairs', 'game_result_history')
     
     # Create a game and its pairs
     def create(self, validated_data):
@@ -51,4 +51,4 @@ class DPrevUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DPrevUser
-        fields = ('full_name', 'username', 'email', 'games_made', 'game_result_history')
+        fields = ('full_name', 'username', 'email', 'games_made', 'user_result_history')
