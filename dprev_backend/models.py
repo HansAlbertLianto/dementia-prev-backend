@@ -1,7 +1,12 @@
-from django.db import models
+from django.db import models, manager
 from django.contrib.auth.models import AbstractBaseUser
 
 # Create your models here.
+
+class DPrevUserManager(models.Manager):
+    def create_dprevuser(self, user, full_name, email):
+        dprevuser = self.create(user=user, full_name=full_name, email=email)
+        return dprevuser
 
 # Users of DementiaPrev
 class DPrevUser(models.Model):
@@ -9,6 +14,8 @@ class DPrevUser(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.CharField(max_length=200)
     REQUIRED_FIELDS = ['full_name', 'email']
+
+    objects = DPrevUserManager()
 
 # A game created by a user of DementiaPrev
 class Game(models.Model):
