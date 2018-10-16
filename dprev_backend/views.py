@@ -31,8 +31,21 @@ class Authentication:
 
     # Login authentication
     def authenticate(self, request, username=None, password=None):
-        login_valid = (username in DPrevUser.objects['username'])
+        try:
+            user = DPrevUser.objects.get(username=username)
+            password_correct = user.check_password(password)
 
+            # Return user if credentials match
+            if (password_correct):
+                return user
+
+        except DPrevUser.DoesNotExist:
+            pass
+        
+        # Fail to sign in, credentials not provided
+        return None
+
+# Show all game results
 class GameResultViewSet(viewsets.ModelViewSet):
     """
     Show game result
@@ -40,6 +53,7 @@ class GameResultViewSet(viewsets.ModelViewSet):
     queryset = GameResult.objects.all()
     serializer_class = GameResultSerializer
 
+# Show all photo name pairs
 class PhotoNamePairViewSet(viewsets.ModelViewSet):
     """
     Show photo name pair

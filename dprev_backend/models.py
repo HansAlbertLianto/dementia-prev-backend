@@ -1,13 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 
 # Create your models here.
 
 # Users of DementiaPrev
-class DPrevUser(models.Model):
+class DPrevUser(AbstractBaseUser):
     full_name = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
+    USERNAME_FIELD = 'username'
     password = models.CharField(max_length=50)
     email = models.CharField(max_length=200)
+    EMAIL_FIELD = 'email'
 
 # A game created by a user of DementiaPrev
 class Game(models.Model):
