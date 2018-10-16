@@ -4,27 +4,38 @@ from django.contrib.auth.models import AbstractBaseUser
 # Create your models here.
 
 # Users of DementiaPrev
-class DPrevUser(AbstractBaseUser):
+class DPrevUser(models.Model):
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100)
-    username = models.CharField(max_length=50, unique=True)
-    USERNAME_FIELD = 'username'
-    password = models.CharField(max_length=50)
     email = models.CharField(max_length=200)
-    EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = ['full_name', 'email']
 
 # A game created by a user of DementiaPrev
 class Game(models.Model):
     creator = models.ForeignKey(DPrevUser, related_name='games_made', on_delete=models.CASCADE)
 
+# A shuffled game
+class ShuffledGame(models.Model):
+    base_game = models.ForeignKey(Game, related_name='game_instances', on_delete=models.CASCADE)
+
 # The end-result of one particular game
 class GameResult(models.Model):
     player = models.ForeignKey(DPrevUser, related_name='user_result_history', on_delete=models.CASCADE)
+    game_instance_played = models.OneToOneField(ShuffledGame, related_name='game_result', on_delete=models.CASCADE)
     game_played = models.ForeignKey(Game, related_name='game_result_history', on_delete=models.CASCADE)
     score = models.IntegerField()
     datetime_reached = models.DateTimeField(auto_now_add=True)
 
-# One question in the game
+# Correct question and answer in the game
 class PhotoNamePair(models.Model):
     game_with_photo = models.ForeignKey(Game, related_name='photo_name_pairs', on_delete=models.CASCADE)
-    photo_link = models.CharField(max_length=100)
+    photo_link = models.ImageField(upload_to='photos')
     name = models.CharField(max_length=100)
+
+# One question and answer in the game
+class PhotoNameQuestion(models.Model):
+    game_with_photo = models.ForeignKey(ShuffledGame, related_name='questions', on_delete=models.CASCADE)
+    photo_link = models.ImageField(upload_to='photos')
+    name = models.CharField(max_length=100)
+    correct = models.BooleanField(default=True)
+

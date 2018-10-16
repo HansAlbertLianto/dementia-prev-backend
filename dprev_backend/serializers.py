@@ -1,16 +1,11 @@
 from django.contrib.auth.models import User, Group
-from dprev_backend.models import DPrevUser, Game, GameResult, PhotoNamePair
+from dprev_backend.models import DPrevUser, Game, GameResult, PhotoNamePair, ShuffledGame, PhotoNameQuestion
 from rest_framework import serializers
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'username', 'email', 'groups')
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ('url', 'name')
 
 # Shows score results of a particular game
 class GameResultSerializer(serializers.ModelSerializer):
@@ -24,14 +19,30 @@ class PhotoNamePairSerializer(serializers.ModelSerializer):
         model = PhotoNamePair
         fields = ('photo_link', 'name')
 
+# Shows the photo and name question
+class PhotoNameQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhotoNameQuestion
+        fields = ('photo_link', 'name', 'correct')
+
+# Shows the game instance
+class ShuffledGameSerializer(serializers.ModelSerializer):
+    questions = PhotoNameQuestionSerializer(many=True)
+    game_result = GameResultSerializer(read_only=True)
+
+    class Meta:
+        model = ShuffledGame
+        fields = ('questions', 'game_result')
+
 # Shows the game, its photo and name pairs, and its score history
 class GameSerializer(serializers.ModelSerializer):
     photo_name_pairs = PhotoNamePairSerializer(many=True)
     game_result_history = GameResultSerializer(many=True, read_only=True)
+    game_instances = ShuffledGameSerializer(many=True)
 
     class Meta:
         model = Game
-        fields = ('photo_name_pairs', 'game_result_history')
+        fields = ('photo_name_pairs', 'game_instances','game_result_history')
     
     # Create a game and its pairs
     def create(self, validated_data):
@@ -51,4 +62,4 @@ class DPrevUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DPrevUser
-        fields = ('full_name', 'username', 'password', 'email', 'games_made', 'user_result_history')
+        fields = ('user', 'full_name', 'email', 'games_made', 'user_result_history')
