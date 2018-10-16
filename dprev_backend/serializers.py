@@ -51,4 +51,4 @@ class DPrevUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DPrevUser
-        fields = ('full_name', 'username', 'email', 'games_made', 'user_result_history')
+        fields = ('full_name', 'username', 'password', 'email', 'games_made', 'user_result_history')

@@ -31,6 +31,8 @@ router.register(r'dprevusers', views.DPrevUserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('users/<int:pk>/', views.user_details),
+    path('games/<int:pk>/', views.game_details),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
