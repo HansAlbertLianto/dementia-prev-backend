@@ -17,22 +17,26 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
-from dprev_backend import views
+from dprev_backend.views import api_view, create_view, login_view, restrict_view, views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
-router.register(r'gameresults', views.GameResultViewSet)
-router.register(r'photonamepairs', views.PhotoNamePairViewSet)
-router.register(r'games', views.GameViewSet)
-router.register(r'dprevusers', views.DPrevUserViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/<int:pk>/', views.user_details),
-    path('games/<int:pk>/', views.game_details),
-    path('games/<int:pk>/<int:pk2>', views.shuffledgame_details),
+    path('login/', login_view.do_login),
+    path('signup/', login_view.do_signup),
+    path('users/<int:pk>/', restrict_view.user_details),
+    path('games/<int:pk>/', restrict_view.game_details),
+    path('games/<int:pk>/<int:pk2>', restrict_view.shuffledgame_details),
+    path('games/<int:pk>/create', create_view.createNewShuffledGame),
+    path('games/<int:pk>/dcreate', create_view.createNewDefaultGame),
+    path('gameresults/', api_view.GameResultList.as_view()),
+    path('photonamepairs/', api_view.PhotoNamePairList.as_view()),
+    path('games/', api_view.GameList.as_view()),
+    path('dprevusers/', api_view.DPrevUserList.as_view()),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
