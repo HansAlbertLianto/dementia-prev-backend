@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User, Group
 from dprev_backend.models import DPrevUser, Game, GameResult, PhotoNamePair, ShuffledGame, PhotoNameQuestion
 from rest_framework import serializers
+import base64
+from django.core.files.base import ContentFile
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -19,11 +21,16 @@ class PhotoNamePairSerializer(serializers.ModelSerializer):
         model = PhotoNamePair
         fields = ('photo_link', 'name')
 
+    def create(self, validated_data):
+        photo_link = validated_data.pop('photo_link')
+        name = validated_data.pop('name')
+        return PhotoNamePair.objects.create(photo_link=photo_link,name=name)
+
 # Shows the photo and name question
 class PhotoNameQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotoNameQuestion
-        fields = ('photo_link', 'name', 'correct')
+        fields = ('default_photo_link', 'name', 'correct')
 
 # Shows the game instance
 class ShuffledGameSerializer(serializers.ModelSerializer):

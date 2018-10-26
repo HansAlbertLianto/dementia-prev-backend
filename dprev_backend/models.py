@@ -42,7 +42,8 @@ class PhotoNamePair(models.Model):
 # One question and answer in the game
 class PhotoNameQuestion(models.Model):
     game_with_photo = models.ForeignKey(ShuffledGame, related_name='questions', on_delete=models.CASCADE)
-    photo_link = models.ImageField(upload_to='photos')
+    corresponding_photo = models.ForeignKey(PhotoNamePair, related_name='photo_questions', on_delete=models.CASCADE, blank=True, null=True)
+    default_photo_link = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     correct = models.BooleanField(default=True)
 

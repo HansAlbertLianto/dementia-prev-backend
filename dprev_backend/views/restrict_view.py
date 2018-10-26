@@ -1,4 +1,4 @@
-from dprev_backend.models import Game, DPrevUser
+from dprev_backend.models import Game, DPrevUser, ShuffledGame
 from dprev_backend.serializers import GameSerializer, DPrevUserSerializer, ShuffledGameSerializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
@@ -32,7 +32,7 @@ def game_details(request, pk):
 @csrf_exempt
 def user_details(request, pk):
     try:
-        user = DPrevUser.objects.get(pk=pk)
+        user = DPrevUser.objects.get(pk=pk-1)
     except user.DoesNotExist:
         return HttpResponse(status=404)
 
@@ -54,10 +54,10 @@ def user_details(request, pk):
 
 # Get one game instance
 @csrf_exempt
-def shuffledgame_details(request, pk, pk2):
+def shuffledgame_details(request, pk):
 
     game = Game.objects.get(pk=pk)
-    shuffled_game = game.game_instances.get(pk=pk2)
+    shuffled_game = game.game_instances.get(pk=ShuffledGame.objects.count())
 
     serializer = ShuffledGameSerializer(shuffled_game)
 

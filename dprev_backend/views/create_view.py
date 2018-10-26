@@ -1,7 +1,9 @@
 from dprev_backend.models import ShuffledGame, Game, PhotoNameQuestion, PhotoNamePair
 from dprev_backend.serializers import ShuffledGameSerializer
 from django.http import HttpResponse, JsonResponse
+from django.core.files.base import ContentFile
 import random, math
+import base64
 
 # Create a new instance of shuffled game
 def createNewShuffledGame(request, pk):
@@ -38,7 +40,9 @@ def createNewShuffledGame(request, pk):
             else:
                 correct = False
 
-            question = PhotoNameQuestion.objects.create(game_with_photo=shuffled_game.id, photo_link=photo_links[index], photo_names=shuffled_photo_names[index], correct=correct)
+            corresponding_photo = PhotoNamePair.objects.get(name = photo_names[index])
+
+            question = PhotoNameQuestion.objects.create(game_with_photo=shuffled_game, corresponding_photo=corresponding_photo, name=shuffled_photo_names[index], correct=correct)
             question.save()
 
 # Create default game
@@ -66,7 +70,7 @@ def createNewDefaultGame(request, pk):
         secondIndex = random.randint(0, len(photo_names) - 1)
         shuffled_photo_names[firstIndex], shuffled_photo_names[secondIndex] = shuffled_photo_names[secondIndex], shuffled_photo_names[firstIndex]
 
-    shuffled_game = ShuffledGame.objects.create(base_game=pk)
+    shuffled_game = ShuffledGame.objects.create(base_game=Game.objects.get(pk=pk))
     shuffled_game.save()
 
     for index in range(0, len(photo_names)):
@@ -75,5 +79,35 @@ def createNewDefaultGame(request, pk):
         else:
             correct = False
 
-        question = PhotoNameQuestion.objects.create(game_with_photo=shuffled_game.id, photo_link=photo_links[index], photo_names=shuffled_photo_names[index], correct=correct)
+        question = PhotoNameQuestion.objects.create(game_with_photo=shuffled_game, default_photo_link = photo_links[index], name=shuffled_photo_names[index], correct=correct)
         question.save()
+
+# Create new game with images
+def createNewGame(request):
+    if (request.method == 'POST'):
+        try:
+            user = request.POST.get("user")
+            new_game = Game.objects.create(creator=user)
+            new_game.save()
+
+            counter = 0
+
+            for str, img_name in request.POST.get("game_image_list"):
+                counter += 1
+
+                if (counter > 10):
+                    break
+
+                # Try to decode the base64 string and place it in image or file field
+                format, imgstr = str.split(';base64,') 
+                ext = format.split('/')[-1] 
+                data = ContentFile(base64.b64decode(imgstr))
+                filename = new_game.creator + "-" + new_game.id + "-" + str(counter) + ext
+                
+                photo = PhotoNamePair.objects.create(game_with_photo=new_game, photo_link=filename, name=img_name)
+
+        except:
+            print("Image save error!")
+            
+            
+
