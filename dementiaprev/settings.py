@@ -96,21 +96,10 @@ WSGI_APPLICATION = 'dementiaprev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'dprev',
-            'USER': 'hansalbertlianto',
-            'PASSWORD': 'cz3002',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600)
-    }
+
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600)
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
