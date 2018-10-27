@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import django.views
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
@@ -41,5 +42,5 @@ urlpatterns = [
     path('dprevusers/', api_view.DPrevUserList.as_view()),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+    url(r'^static/(?P.*)$', django.views.static.serve, {'document_root': settings.STATIC_ROOT}),
 ]
