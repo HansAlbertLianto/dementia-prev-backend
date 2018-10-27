@@ -32,7 +32,7 @@ def game_details(request, pk):
 @csrf_exempt
 def user_details(request, username):
     try:
-        user = DPrevUser.objects.get(user.username=username)
+        user = DPrevUser.objects.get(user__username=username)
     except user.DoesNotExist:
         return HttpResponse(status=404)
 
@@ -54,9 +54,9 @@ def user_details(request, username):
 
 # Get one game instance
 @csrf_exempt
-def shuffledgame_details(request, pk):
+def shuffledgame_details(request, gamename):
 
-    game = Game.objects.get(pk=pk)
+    game = Game.objects.get(gamename=gamename)
     shuffled_game = game.game_instances.get(pk=ShuffledGame.objects.count())
 
     serializer = ShuffledGameSerializer(shuffled_game)
