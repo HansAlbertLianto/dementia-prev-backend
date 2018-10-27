@@ -49,7 +49,7 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('photo_name_pairs', 'game_instances','game_result_history')
+        fields = ('gamename', 'photo_name_pairs', 'game_instances','game_result_history')
     
     # Create a game and its pairs
     def create(self, validated_data):

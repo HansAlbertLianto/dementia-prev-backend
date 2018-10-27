@@ -30,9 +30,9 @@ def game_details(request, pk):
 
 # Restrict to one user
 @csrf_exempt
-def user_details(request, pk):
+def user_details(request, username):
     try:
-        user = DPrevUser.objects.get(pk=pk-1)
+        user = DPrevUser.objects.get(user.username=username)
     except user.DoesNotExist:
         return HttpResponse(status=404)
 

@@ -20,6 +20,7 @@ class DPrevUser(models.Model):
 # A game created by a user of DementiaPrev
 class Game(models.Model):
     creator = models.ForeignKey(DPrevUser, related_name='games_made', on_delete=models.CASCADE)
+    gamename = models.CharField(unique=True)
 
 # A shuffled game
 class ShuffledGame(models.Model):

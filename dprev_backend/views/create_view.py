@@ -6,10 +6,10 @@ import random, math
 import base64
 
 # Create a new instance of shuffled game
-def createNewShuffledGame(request, pk):
+def createNewShuffledGame(request, gamename):
     if (request.method == 'POST'):
         try:
-            game = Game.objects.get(pk=pk)
+            game = Game.objects.get(gamename=gamename)
         except:
             print("Error!")
 
@@ -46,7 +46,7 @@ def createNewShuffledGame(request, pk):
             question.save()
 
 # Create default game
-def createNewDefaultGame(request, pk):
+def createNewDefaultGame(request, gamename):
     photo_links = ["https://upload.wikimedia.org/wikipedia/commons/f/f3/Al_Capone_in_1930.jpg",\
     "https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTE5NTU2MzE2MzIyMTA0ODQz/marilyn-monroe-9412123-1-402.jpg",\
     "https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTE4MDAzNDEwNzg5ODI4MTEw/barack-obama-12782369-1-402.jpg",\
@@ -70,7 +70,7 @@ def createNewDefaultGame(request, pk):
         secondIndex = random.randint(0, len(photo_names) - 1)
         shuffled_photo_names[firstIndex], shuffled_photo_names[secondIndex] = shuffled_photo_names[secondIndex], shuffled_photo_names[firstIndex]
 
-    shuffled_game = ShuffledGame.objects.create(base_game=Game.objects.get(pk=pk))
+    shuffled_game = ShuffledGame.objects.create(base_game=Game.objects.get(gamename=gamename))
     shuffled_game.save()
 
     for index in range(0, len(photo_names)):
