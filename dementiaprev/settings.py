@@ -23,6 +23,8 @@ if ENV == 'TEST':
 else:
     DEBUG = False
 
+print(DEBUG)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -30,7 +32,6 @@ else:
 SECRET_KEY = 'gdwhdd)e$gr^n0re3rii7+kf&*ae*%2vamrzt@yi)_3@-qs!@q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -110,9 +111,6 @@ else:
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600)
     }
-
-
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
