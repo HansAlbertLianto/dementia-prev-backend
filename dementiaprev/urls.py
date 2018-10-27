@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
 from django.conf.urls import url, include
 from rest_framework import routers
 from dprev_backend.views import api_view, create_view, login_view, restrict_view, views
